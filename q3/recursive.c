@@ -49,7 +49,9 @@ TreeNode *flatten(TreeNode *root)
     if(root->left!=NULL){
 	TreeNode *right = root->right;
 	root->right = flatten(root->right);
+	root->left = flatten(root->left);
 	TreeNode *rightMost = root->left;
+	
 	while(rightMost->right) rightMost = rightMost->right;
 	rightMost->right = right;
 	root->right = root->left;
