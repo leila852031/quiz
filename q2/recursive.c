@@ -13,16 +13,16 @@ int main()
 
 char smallest_character(char str[], char c)
 {
-    if((c<'a') || (c>'z')) 
-	return -1;
+    if((c<'a') || (c>'z'))
+        return -1;
     int len = strlen(str);
     static int i=0;
-    if(len==0) 
-	return -1;
+    if(len==0)
+        return -1;
     if(i==len)
-	return str[0];
-    if(str[i]>c) 
-	return str[i];
+        return str[0];
+    if(str[i]>c)
+        return str[i];
     i++;
     return smallest_character(str, c);
 }
