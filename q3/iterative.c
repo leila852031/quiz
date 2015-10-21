@@ -2,82 +2,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE 6
 
-struct node{
+struct node {
     int value;
     struct node *left;
     struct node *right;
 };
 typedef struct node TreeNode;
-TreeNode *buildTree (int str[]);
-void insert(TreeNode **node, TreeNode *item);
 void *flatten(TreeNode *root);
-void printout(TreeNode *node);
+void printout(TreeNode *node, int level, char side);
 
 int main()
 {
-    int str[SIZE]={1,2,3,4,5,6};
     TreeNode *root = (TreeNode *)malloc(sizeof(TreeNode));
-    root = buildTree(str);
-    printout(root);
+    root->value = 1;
+    root->left = (TreeNode *)malloc(sizeof(TreeNode));
+    root->left->value = 2;
+    root->left->left = (TreeNode *)malloc(sizeof(TreeNode));
+    root->left->left->value = 3;
+    root->left->left->left = NULL;
+    root->left->left->right = NULL;
+    root->left->right = (TreeNode *)malloc(sizeof(TreeNode));
+    root->left->right->value = 4;
+    root->left->right->left = NULL;
+    root->left->right->right = NULL;
+    root->right = (TreeNode *)malloc(sizeof(TreeNode));
+    root->right->value = 5;
+    root->right->right = (TreeNode *)malloc(sizeof(TreeNode));
+    root->right->right->value = 6;
+    root->right->right->right = NULL;
+    root->right->right->left = NULL;
+    printout(root, 0, ' ');
     flatten(root);
-    printout(root);
+    printout(root, 0, ' ');
     return 0;
 }
 
-TreeNode *buildTree(int str[])
-{   
-    int i;
-    TreeNode *root = (TreeNode *)malloc(sizeof(TreeNode));
-    TreeNode *node;
-    root->value=str[0];
-    for(i=1; i<SIZE; i++){
-	node = (TreeNode *)malloc(sizeof(TreeNode));
-	node->right=NULL;
-	node->left=NULL;
-	node->value=str[i];
-	insert(&root, node);
-    }
-    return root;	
-}
 
 void *flatten(TreeNode *root)
 {
-    if(root==NULL)
-	return;
-    while(root){
-        if(root->left){
-	    TreeNode *rightMost=root->left;
-	    while(rightMost->right) rightMost = rightMost->right;
-	        rightMost->right = root-> right;
-	        root->right = root->left;
-  	        root->left = NULL;
-        }  
-	root = root->right;
+    while(root) {
+        if(root->left) {
+            TreeNode *rightMost=root->left;
+            while(rightMost->right) rightMost = rightMost->right;
+            rightMost->right = root-> right;
+            root->right = root->left;
+            root->left = NULL;
+        }
+        root = root->right;
+
     }
 
 }
 
-
-
-void insert(TreeNode **node, TreeNode *item){
-    if((*node)==NULL){
-	*node = item;
-	return;
-    }
-    if((item->value)<((*node)->value))
-	insert(&(*node)->left, item);
-    else
- 	insert(&(*node)->right, item);
-}
-
-
-void printout(TreeNode *node)
+void printout(TreeNode *node, int level, char side)
 {
-     if(node->left!=NULL)
-	printout(node->left);
-        printf("%d\n", node->value);
-     if(node->right!=NULL)
-	printout(node->right);
+    int i;
+    for(i=0; i<level; i++) {
+        printf("  %c", side);
+    }
+    printf("%d\n", node->value);
+    if(node->left)
+        printout(node->left, level+1, 'L');
+    if(node->right)
+        printout(node->right, level+1, 'R');
 }
